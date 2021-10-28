@@ -1,0 +1,31 @@
+# serverless.yml
+service: washed
+org: nafer1104
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  environment:
+    MONGO_NAME_CONNECTION: connection_mongo_car_wash
+    MONGO_HOST: cluster0-shard-00-00.iykge.mongodb.net,cluster0-shard-00-01.iykge.mongodb.net,cluster0-shard-00-02.iykge.mongodb.net
+    MONGO_DATABASE: car-wash
+    MONGO_PORT: 27017
+    MONGO_USER: car-wash-admin
+    MONGO_PASSWORD: xvgMQKCZyJNXMzxg
+    MONGO_REPLICASET: atlas-59b5mg-shard-0
+    MONGO_AUTH_SOURCE: admin
+    MONGO_SSL: true
+
+functions:
+  washed:
+    handler: washed.handler # required, handler set in AWS Lambda
+    name: ${sls:stage}-washed # optional, Deployed Lambda name
+    description: Register the washed with all it services
+    memorySize: 512 # optional, in MB, default is 1024
+    timeout: 5 # optional, in seconds, default is 6
+    events: # The Events that trigger this Function
+      - http: # This creates an API Gateway HTTP endpoint which can be used to trigger this function.  Learn more in "events/apigateway"
+          path: washed # Path for this endpoint
+          method: get # HTTP method for this endpoint
+          cors: true # Turn on CORS for this endpoint, but don't forget to return the right header in your response
