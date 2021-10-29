@@ -29,3 +29,15 @@ functions:
           path: washed # Path for this endpoint
           method: get # HTTP method for this endpoint
           cors: true # Turn on CORS for this endpoint, but don't forget to return the right header in your response
+  
+  workers:
+    handler: workers.handler # required, handler set in AWS Lambda
+    name: ${sls:stage}-workers # optional, Deployed Lambda name
+    description: List the workers
+    memorySize: 512 # optional, in MB, default is 1024
+    timeout: 5 # optional, in seconds, default is 6
+    events: # The Events that trigger this Function
+      - http: # This creates an API Gateway HTTP endpoint which can be used to trigger this function.  Learn more in "events/apigateway"
+          path: workers # Path for this endpoint
+          method: get # HTTP method for this endpoint
+          cors: true # Turn on CORS for this endpoint, but don't forget to return the right header in your response

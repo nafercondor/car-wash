@@ -77,6 +77,12 @@
         "LogGroupName": "/aws/lambda/dev-washed"
       }
     },
+    "WorkersLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/dev-workers"
+      }
+    },
     "IamRoleLambdaExecution": {
       "Type": "AWS::IAM::Role",
       "Properties": {
@@ -120,6 +126,9 @@
                   "Resource": [
                     {
                       "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/dev-washed:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/dev-workers:*"
                     }
                   ]
                 },
@@ -131,6 +140,9 @@
                   "Resource": [
                     {
                       "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/dev-washed:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/dev-workers:*:*"
                     }
                   ]
                 }
@@ -161,7 +173,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/washed/dev/1635457482427-2021-10-28T21:44:42.427Z/washed.zip"
+          "S3Key": "serverless/washed/dev/1635525522181-2021-10-29T16:38:42.181Z/washed.zip"
         },
         "Handler": "washed.handler",
         "Runtime": "nodejs14.x",
@@ -193,15 +205,65 @@
         "WashedLogGroup"
       ]
     },
-    "WashedLambdaVersion79iU8C3HHwYRPXekM059K70SD8BSWjkUsiHEJTMd8U": {
+    "WorkersLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/washed/dev/1635525522181-2021-10-29T16:38:42.181Z/washed.zip"
+        },
+        "Handler": "workers.handler",
+        "Runtime": "nodejs14.x",
+        "FunctionName": "dev-workers",
+        "MemorySize": 512,
+        "Timeout": 5,
+        "Description": "List the workers",
+        "Environment": {
+          "Variables": {
+            "MONGO_NAME_CONNECTION": "connection_mongo_car_wash",
+            "MONGO_HOST": "cluster0-shard-00-00.iykge.mongodb.net,cluster0-shard-00-01.iykge.mongodb.net,cluster0-shard-00-02.iykge.mongodb.net",
+            "MONGO_DATABASE": "car-wash",
+            "MONGO_PORT": "27017",
+            "MONGO_USER": "car-wash-admin",
+            "MONGO_PASSWORD": "xvgMQKCZyJNXMzxg",
+            "MONGO_REPLICASET": "atlas-59b5mg-shard-0",
+            "MONGO_AUTH_SOURCE": "admin",
+            "MONGO_SSL": "true"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "WorkersLogGroup"
+      ]
+    },
+    "WashedLambdaVersioneGrOe3QnX3kL4LE1SHallPChW0S6wjul5bPgnjF4bY": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "WashedLambdaFunction"
         },
-        "CodeSha256": "09aozOHf9lUC63RJ+XtR9udpQSHFVP9drkuQfALGSBc=",
+        "CodeSha256": "dDyLdqP3uAgrYIzaW7awOfEO6cl0KEnnby21XucQG/Q=",
         "Description": "Register the washed with all it services"
+      }
+    },
+    "WorkersLambdaVersion1sc1XnaVxFVucAAZam1XoAmythvY8tUiVZx0tKtqY": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "WorkersLambdaFunction"
+        },
+        "CodeSha256": "dDyLdqP3uAgrYIzaW7awOfEO6cl0KEnnby21XucQG/Q=",
+        "Description": "List the workers"
       }
     },
     "ApiGatewayRestApi": {
@@ -226,6 +288,21 @@
           ]
         },
         "PathPart": "washed",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceWorkers": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "workers",
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         }
@@ -270,6 +347,51 @@
         },
         "ResourceId": {
           "Ref": "ApiGatewayResourceWashed"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodWorkersOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceWorkers"
         },
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
@@ -322,7 +444,53 @@
         "WashedLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1635457480861": {
+    "ApiGatewayMethodWorkersGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceWorkers"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "WorkersLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      },
+      "DependsOn": [
+        "WorkersLambdaPermissionApiGateway"
+      ]
+    },
+    "ApiGatewayDeployment1635525520609": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -332,7 +500,9 @@
       },
       "DependsOn": [
         "ApiGatewayMethodWashedOptions",
-        "ApiGatewayMethodWashedGet"
+        "ApiGatewayMethodWorkersOptions",
+        "ApiGatewayMethodWashedGet",
+        "ApiGatewayMethodWorkersGet"
       ]
     },
     "WashedLambdaPermissionApiGateway": {
@@ -341,6 +511,43 @@
         "FunctionName": {
           "Fn::GetAtt": [
             "WashedLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "WorkersLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "WorkersLambdaFunction",
             "Arn"
           ]
         },
@@ -385,10 +592,19 @@
     "WashedLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "WashedLambdaVersion79iU8C3HHwYRPXekM059K70SD8BSWjkUsiHEJTMd8U"
+        "Ref": "WashedLambdaVersioneGrOe3QnX3kL4LE1SHallPChW0S6wjul5bPgnjF4bY"
       },
       "Export": {
         "Name": "sls-washed-dev-WashedLambdaFunctionQualifiedArn"
+      }
+    },
+    "WorkersLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "WorkersLambdaVersion1sc1XnaVxFVucAAZam1XoAmythvY8tUiVZx0tKtqY"
+      },
+      "Export": {
+        "Name": "sls-washed-dev-WorkersLambdaFunctionQualifiedArn"
       }
     },
     "ServiceEndpoint": {
