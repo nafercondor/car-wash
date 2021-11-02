@@ -27,8 +27,6 @@ jobs:
       - name: Installing dependencies service
         run: |
           npm i
-      - name: Running tests
-        run: npm test
 
       - name: zip
         uses: montudor/action-zip@v0.1.0
