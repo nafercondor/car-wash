@@ -1,17 +1,20 @@
 
-const mongoDbHelper = require("./utils/mongoHelper");
+const washedController = require("./controller/washed");
+
 module.exports.handler = async (event, context) => {
-  
-    let c = await mongoDbHelper.connect();
-  
-    const userModelDB1 = require("./models/worker");
-  
-      await userModelDB1.findOne({});
-      console.log("CONSULTA MONGO");
-      console.log(await userModelDB1.findOne({}));
+
+  try {
+    let dataWashed = JSON.parse(event.body);
+    return await washedController.save(dataWashed);
+
+  } catch (error) {
+    console.log("ERROR SAVE WASHED");
+    console.log(error);
 
     return {
-      statusCode: 200,
-      body: JSON.stringify(event),
+      statusCode: 500,
+      body: error
     };
+  }
+
 };

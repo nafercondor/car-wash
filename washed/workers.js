@@ -1,34 +1,12 @@
 
-const mongoDbHelper = require("./utils/mongoHelper");
-
-const getArrayOnlyAttribures = (workersModels) =>{
-    let workersAtt = [];
-
-    workersModels.forEach(element => {
-        workersAtt.push({
-            _id:element._id,
-            firstName:element.firstName,
-            firstLastName:element.firstLastName,
-            identificacion:element._id,
-            href:`workers/${element._id}`,
-        });
-    });
-
-    return workersAtt;
-};
+const workerController = require("./controller/worker");
 
 module.exports.handler = async (event, context) => {
     let workers = [];
 
     try{
 
-        await mongoDbHelper.connect();
-
-        const workersModel = require("./models/worker");
-
-        workers = await workersModel.find({});
-
-        workers = getArrayOnlyAttribures(workers);
+        workers = await workerController.list();
 
     }catch(error){
         console.log("ERROR LIST WORKERS");

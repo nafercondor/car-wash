@@ -112,6 +112,12 @@
               "LogGroupName": "/aws/lambda/dev-services"
             }
           },
+          "ReportLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/dev-report"
+            }
+          },
           "IamRoleLambdaExecution": {
             "Type": "AWS::IAM::Role",
             "Properties": {
@@ -161,6 +167,9 @@
                           },
                           {
                             "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/dev-services:*"
+                          },
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/dev-report:*"
                           }
                         ]
                       },
@@ -178,6 +187,9 @@
                           },
                           {
                             "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/dev-services:*:*"
+                          },
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/dev-report:*:*"
                           }
                         ]
                       }
@@ -208,7 +220,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/washed/dev/1635534382404-2021-10-29T19:06:22.404Z/washed.zip"
+                "S3Key": "serverless/washed/dev/1635853757231-2021-11-02T11:49:17.231Z/washed.zip"
               },
               "Handler": "washed.handler",
               "Runtime": "nodejs14.x",
@@ -247,7 +259,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/washed/dev/1635534382404-2021-10-29T19:06:22.404Z/washed.zip"
+                "S3Key": "serverless/washed/dev/1635853757231-2021-11-02T11:49:17.231Z/washed.zip"
               },
               "Handler": "workers.handler",
               "Runtime": "nodejs14.x",
@@ -286,7 +298,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/washed/dev/1635534382404-2021-10-29T19:06:22.404Z/washed.zip"
+                "S3Key": "serverless/washed/dev/1635853757231-2021-11-02T11:49:17.231Z/washed.zip"
               },
               "Handler": "services.handler",
               "Runtime": "nodejs14.x",
@@ -318,36 +330,86 @@
               "ServicesLogGroup"
             ]
           },
-          "WashedLambdaVersionrRDSKmPaJpmtOl4Qco8JmiSHSOgUkTawkBQidxpmyp4": {
+          "ReportLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/washed/dev/1635853757231-2021-11-02T11:49:17.231Z/washed.zip"
+              },
+              "Handler": "report.handler",
+              "Runtime": "nodejs14.x",
+              "FunctionName": "dev-report",
+              "MemorySize": 512,
+              "Timeout": 5,
+              "Description": "List the washed",
+              "Environment": {
+                "Variables": {
+                  "MONGO_NAME_CONNECTION": "connection_mongo_car_wash",
+                  "MONGO_HOST": "cluster0-shard-00-00.iykge.mongodb.net,cluster0-shard-00-01.iykge.mongodb.net,cluster0-shard-00-02.iykge.mongodb.net",
+                  "MONGO_DATABASE": "car-wash",
+                  "MONGO_PORT": "27017",
+                  "MONGO_USER": "car-wash-admin",
+                  "MONGO_PASSWORD": "xvgMQKCZyJNXMzxg",
+                  "MONGO_REPLICASET": "atlas-59b5mg-shard-0",
+                  "MONGO_AUTH_SOURCE": "admin",
+                  "MONGO_SSL": "true"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "ReportLogGroup"
+            ]
+          },
+          "WashedLambdaVersionjE3zsp4JvrQscMzcPeplXt300Vz5OJ3Qq7oTAkiGxM": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "WashedLambdaFunction"
               },
-              "CodeSha256": "D4+gCRwmUVuJtk/XRyqtdHQmU/YidmJaN44wJp/Hmx4=",
+              "CodeSha256": "m6RmyReVrNIRjx9w0wPssqWdVXbRTvFdeqY+bAoGB/0=",
               "Description": "Register the washed with all it services"
             }
           },
-          "WorkersLambdaVersion8Chx9bJhvDvfIGPh9YjBS6ssa8kIJvRPHAlI6GxI": {
+          "WorkersLambdaVersionOndmmFFLqTJmy7w7escPe6rt1Vp6fsxJfeZLBz7uus": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "WorkersLambdaFunction"
               },
-              "CodeSha256": "D4+gCRwmUVuJtk/XRyqtdHQmU/YidmJaN44wJp/Hmx4=",
+              "CodeSha256": "m6RmyReVrNIRjx9w0wPssqWdVXbRTvFdeqY+bAoGB/0=",
               "Description": "List the workers"
             }
           },
-          "ServicesLambdaVersion1EgHRCJBXFLIEsRvOAxrFFRZFJueflReMS55UuSPHlY": {
+          "ReportLambdaVersioncd9lgci98mTSUm7JAsRtEm9fdxXBcWsr3cVVOQVOOo": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "ReportLambdaFunction"
+              },
+              "CodeSha256": "m6RmyReVrNIRjx9w0wPssqWdVXbRTvFdeqY+bAoGB/0=",
+              "Description": "List the washed"
+            }
+          },
+          "ServicesLambdaVersionFSKhz3xz1dz8bNkiJwcqPvswb9W2NnMMOe1jAA": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ServicesLambdaFunction"
               },
-              "CodeSha256": "D4+gCRwmUVuJtk/XRyqtdHQmU/YidmJaN44wJp/Hmx4=",
+              "CodeSha256": "m6RmyReVrNIRjx9w0wPssqWdVXbRTvFdeqY+bAoGB/0=",
               "Description": "List the services"
             }
           },
@@ -408,6 +470,21 @@
               }
             }
           },
+          "ApiGatewayResourceReport": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "report",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
           "ApiGatewayMethodWashedOptions": {
             "Type": "AWS::ApiGateway::Method",
             "Properties": {
@@ -437,7 +514,7 @@
                     "ResponseParameters": {
                       "method.response.header.Access-Control-Allow-Origin": "'*'",
                       "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
-                      "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET'"
+                      "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'"
                     },
                     "ResponseTemplates": {
                       "application/json": ""
@@ -543,10 +620,55 @@
               }
             }
           },
-          "ApiGatewayMethodWashedGet": {
+          "ApiGatewayMethodReportOptions": {
             "Type": "AWS::ApiGateway::Method",
             "Properties": {
-              "HttpMethod": "GET",
+              "AuthorizationType": "NONE",
+              "HttpMethod": "OPTIONS",
+              "MethodResponses": [
+                {
+                  "StatusCode": "200",
+                  "ResponseParameters": {
+                    "method.response.header.Access-Control-Allow-Origin": true,
+                    "method.response.header.Access-Control-Allow-Headers": true,
+                    "method.response.header.Access-Control-Allow-Methods": true
+                  },
+                  "ResponseModels": {}
+                }
+              ],
+              "RequestParameters": {},
+              "Integration": {
+                "Type": "MOCK",
+                "RequestTemplates": {
+                  "application/json": "{statusCode:200}"
+                },
+                "ContentHandling": "CONVERT_TO_TEXT",
+                "IntegrationResponses": [
+                  {
+                    "StatusCode": "200",
+                    "ResponseParameters": {
+                      "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                      "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET'"
+                    },
+                    "ResponseTemplates": {
+                      "application/json": ""
+                    }
+                  }
+                ]
+              },
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceReport"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayMethodWashedPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
               "RequestParameters": {},
               "ResourceId": {
                 "Ref": "ApiGatewayResourceWashed"
@@ -681,7 +803,53 @@
               "ServicesLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1635534380828": {
+          "ApiGatewayMethodReportGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceReport"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "ReportLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "ReportLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayDeployment1635853755651": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -693,9 +861,11 @@
               "ApiGatewayMethodWashedOptions",
               "ApiGatewayMethodWorkersOptions",
               "ApiGatewayMethodServicesOptions",
-              "ApiGatewayMethodWashedGet",
+              "ApiGatewayMethodReportOptions",
+              "ApiGatewayMethodWashedPost",
               "ApiGatewayMethodWorkersGet",
-              "ApiGatewayMethodServicesGet"
+              "ApiGatewayMethodServicesGet",
+              "ApiGatewayMethodReportGet"
             ]
           },
           "WashedLambdaPermissionApiGateway": {
@@ -808,6 +978,43 @@
                 ]
               }
             }
+          },
+          "ReportLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "ReportLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
           }
         },
         "Outputs": {
@@ -822,7 +1029,7 @@
           "WashedLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "WashedLambdaVersionrRDSKmPaJpmtOl4Qco8JmiSHSOgUkTawkBQidxpmyp4"
+              "Ref": "WashedLambdaVersionjE3zsp4JvrQscMzcPeplXt300Vz5OJ3Qq7oTAkiGxM"
             },
             "Export": {
               "Name": "sls-washed-dev-WashedLambdaFunctionQualifiedArn"
@@ -831,16 +1038,25 @@
           "WorkersLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "WorkersLambdaVersion8Chx9bJhvDvfIGPh9YjBS6ssa8kIJvRPHAlI6GxI"
+              "Ref": "WorkersLambdaVersionOndmmFFLqTJmy7w7escPe6rt1Vp6fsxJfeZLBz7uus"
             },
             "Export": {
               "Name": "sls-washed-dev-WorkersLambdaFunctionQualifiedArn"
             }
           },
+          "ReportLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "ReportLambdaVersioncd9lgci98mTSUm7JAsRtEm9fdxXBcWsr3cVVOQVOOo"
+            },
+            "Export": {
+              "Name": "sls-washed-dev-ReportLambdaFunctionQualifiedArn"
+            }
+          },
           "ServicesLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ServicesLambdaVersion1EgHRCJBXFLIEsRvOAxrFFRZFJueflReMS55UuSPHlY"
+              "Ref": "ServicesLambdaVersionFSKhz3xz1dz8bNkiJwcqPvswb9W2NnMMOe1jAA"
             },
             "Export": {
               "Name": "sls-washed-dev-ServicesLambdaFunctionQualifiedArn"
@@ -970,12 +1186,12 @@
           {
             "http": {
               "path": "washed",
-              "method": "get",
+              "method": "post",
               "cors": {
                 "origin": "*",
                 "methods": [
                   "OPTIONS",
-                  "GET"
+                  "POST"
                 ],
                 "headers": [
                   "Content-Type",
@@ -995,7 +1211,7 @@
         "memory": 512,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "WashedLambdaVersionrRDSKmPaJpmtOl4Qco8JmiSHSOgUkTawkBQidxpmyp4"
+        "versionLogicalId": "WashedLambdaVersionjE3zsp4JvrQscMzcPeplXt300Vz5OJ3Qq7oTAkiGxM"
       },
       "workers": {
         "handler": "workers.handler",
@@ -1032,7 +1248,7 @@
         "memory": 512,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "WorkersLambdaVersion8Chx9bJhvDvfIGPh9YjBS6ssa8kIJvRPHAlI6GxI"
+        "versionLogicalId": "WorkersLambdaVersionOndmmFFLqTJmy7w7escPe6rt1Vp6fsxJfeZLBz7uus"
       },
       "services": {
         "handler": "services.handler",
@@ -1069,7 +1285,44 @@
         "memory": 512,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "ServicesLambdaVersion1EgHRCJBXFLIEsRvOAxrFFRZFJueflReMS55UuSPHlY"
+        "versionLogicalId": "ServicesLambdaVersionFSKhz3xz1dz8bNkiJwcqPvswb9W2NnMMOe1jAA"
+      },
+      "report": {
+        "handler": "report.handler",
+        "name": "dev-report",
+        "description": "List the washed",
+        "memorySize": 512,
+        "timeout": 5,
+        "events": [
+          {
+            "http": {
+              "path": "report",
+              "method": "get",
+              "cors": {
+                "origin": "*",
+                "methods": [
+                  "OPTIONS",
+                  "GET"
+                ],
+                "headers": [
+                  "Content-Type",
+                  "X-Amz-Date",
+                  "Authorization",
+                  "X-Api-Key",
+                  "X-Amz-Security-Token",
+                  "X-Amz-User-Agent"
+                ],
+                "allowCredentials": false
+              },
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "package": {},
+        "memory": 512,
+        "runtime": "nodejs14.x",
+        "vpc": {},
+        "versionLogicalId": "ReportLambdaVersioncd9lgci98mTSUm7JAsRtEm9fdxXBcWsr3cVVOQVOOo"
       }
     },
     "configValidationMode": "warn",
@@ -1093,7 +1346,7 @@
     "artifact": "/Users/naferhernandez/projects/car-wash/washed/.serverless/washed.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/washed/dev/1635534382404-2021-10-29T19:06:22.404Z",
+    "artifactDirectoryName": "serverless/washed/dev/1635853757231-2021-11-02T11:49:17.231Z",
     "artifact": "washed.zip"
   }
 }
