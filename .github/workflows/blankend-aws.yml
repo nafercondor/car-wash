@@ -29,3 +29,15 @@ jobs:
           npm i
       - name: Running tests
         run: npm test
+
+      - name: zip
+        uses: montudor/action-zip@v0.1.0
+        with:
+          args: zip -qq -r ./bundle.zip ./
+      - name: default deploy
+        uses: appleboy/lambda-action@master
+        with:
+          aws_access_key_id: AKIAXNQDEYLLSEDRJ66Q
+          aws_secret_access_key: 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
+          aws_region: eu-west-1
+          zip_file: bundle.zip

@@ -1,5 +1,5 @@
 const reportController = require("../controller/report");
-
+jest.useFakeTimers()
 describe("Filter function", () => {
     test("it should filter by a search worker id 617abbd0e7ec5027b9137493", async() => {
       const input = {
