@@ -197,7 +197,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/washed/dev/1635853757231-2021-11-02T11:49:17.231Z/washed.zip"
+          "S3Key": "serverless/washed/dev/1635891335124-2021-11-02T22:15:35.124Z/washed.zip"
         },
         "Handler": "washed.handler",
         "Runtime": "nodejs14.x",
@@ -236,7 +236,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/washed/dev/1635853757231-2021-11-02T11:49:17.231Z/washed.zip"
+          "S3Key": "serverless/washed/dev/1635891335124-2021-11-02T22:15:35.124Z/washed.zip"
         },
         "Handler": "workers.handler",
         "Runtime": "nodejs14.x",
@@ -275,7 +275,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/washed/dev/1635853757231-2021-11-02T11:49:17.231Z/washed.zip"
+          "S3Key": "serverless/washed/dev/1635891335124-2021-11-02T22:15:35.124Z/washed.zip"
         },
         "Handler": "services.handler",
         "Runtime": "nodejs14.x",
@@ -314,7 +314,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/washed/dev/1635853757231-2021-11-02T11:49:17.231Z/washed.zip"
+          "S3Key": "serverless/washed/dev/1635891335124-2021-11-02T22:15:35.124Z/washed.zip"
         },
         "Handler": "report.handler",
         "Runtime": "nodejs14.x",
@@ -346,48 +346,48 @@
         "ReportLogGroup"
       ]
     },
-    "WashedLambdaVersionjE3zsp4JvrQscMzcPeplXt300Vz5OJ3Qq7oTAkiGxM": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "WashedLambdaFunction"
-        },
-        "CodeSha256": "m6RmyReVrNIRjx9w0wPssqWdVXbRTvFdeqY+bAoGB/0=",
-        "Description": "Register the washed with all it services"
-      }
-    },
-    "WorkersLambdaVersionOndmmFFLqTJmy7w7escPe6rt1Vp6fsxJfeZLBz7uus": {
+    "WorkersLambdaVersionkmJ8Mbn108oXnJ2IGzgRnqkWIvHf6GxWMFUokDz2Y": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "WorkersLambdaFunction"
         },
-        "CodeSha256": "m6RmyReVrNIRjx9w0wPssqWdVXbRTvFdeqY+bAoGB/0=",
+        "CodeSha256": "hWZPgCQeXwDiP2L8orjDK2Bgvyvjwi8ATcgLEFZV8g4=",
         "Description": "List the workers"
       }
     },
-    "ReportLambdaVersioncd9lgci98mTSUm7JAsRtEm9fdxXBcWsr3cVVOQVOOo": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "ReportLambdaFunction"
-        },
-        "CodeSha256": "m6RmyReVrNIRjx9w0wPssqWdVXbRTvFdeqY+bAoGB/0=",
-        "Description": "List the washed"
-      }
-    },
-    "ServicesLambdaVersionFSKhz3xz1dz8bNkiJwcqPvswb9W2NnMMOe1jAA": {
+    "ServicesLambdaVersion3mutaIILKBp4xgJFIIDSn7FYiWWAxKoX0KnkxV0kWE": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ServicesLambdaFunction"
         },
-        "CodeSha256": "m6RmyReVrNIRjx9w0wPssqWdVXbRTvFdeqY+bAoGB/0=",
+        "CodeSha256": "hWZPgCQeXwDiP2L8orjDK2Bgvyvjwi8ATcgLEFZV8g4=",
         "Description": "List the services"
+      }
+    },
+    "ReportLambdaVersion5j3ciNpWocSiUOTECmGOjnyBnhHOLjFklauNKkWTs8": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "ReportLambdaFunction"
+        },
+        "CodeSha256": "hWZPgCQeXwDiP2L8orjDK2Bgvyvjwi8ATcgLEFZV8g4=",
+        "Description": "List the washed"
+      }
+    },
+    "WashedLambdaVersionZ6fScTO3vhUF3GwN1ze2f0uhR8Mh3GvWcW5dT9KQ": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "WashedLambdaFunction"
+        },
+        "CodeSha256": "hWZPgCQeXwDiP2L8orjDK2Bgvyvjwi8ATcgLEFZV8g4=",
+        "Description": "Register the washed with all it services"
       }
     },
     "ApiGatewayRestApi": {
@@ -826,7 +826,7 @@
         "ReportLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1635853755651": {
+    "ApiGatewayDeployment1635891330655": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -1003,40 +1003,40 @@
         "Name": "sls-washed-dev-ServerlessDeploymentBucketName"
       }
     },
-    "WashedLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "WashedLambdaVersionjE3zsp4JvrQscMzcPeplXt300Vz5OJ3Qq7oTAkiGxM"
-      },
-      "Export": {
-        "Name": "sls-washed-dev-WashedLambdaFunctionQualifiedArn"
-      }
-    },
     "WorkersLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "WorkersLambdaVersionOndmmFFLqTJmy7w7escPe6rt1Vp6fsxJfeZLBz7uus"
+        "Ref": "WorkersLambdaVersionkmJ8Mbn108oXnJ2IGzgRnqkWIvHf6GxWMFUokDz2Y"
       },
       "Export": {
         "Name": "sls-washed-dev-WorkersLambdaFunctionQualifiedArn"
       }
     },
+    "ServicesLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "ServicesLambdaVersion3mutaIILKBp4xgJFIIDSn7FYiWWAxKoX0KnkxV0kWE"
+      },
+      "Export": {
+        "Name": "sls-washed-dev-ServicesLambdaFunctionQualifiedArn"
+      }
+    },
     "ReportLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ReportLambdaVersioncd9lgci98mTSUm7JAsRtEm9fdxXBcWsr3cVVOQVOOo"
+        "Ref": "ReportLambdaVersion5j3ciNpWocSiUOTECmGOjnyBnhHOLjFklauNKkWTs8"
       },
       "Export": {
         "Name": "sls-washed-dev-ReportLambdaFunctionQualifiedArn"
       }
     },
-    "ServicesLambdaFunctionQualifiedArn": {
+    "WashedLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ServicesLambdaVersionFSKhz3xz1dz8bNkiJwcqPvswb9W2NnMMOe1jAA"
+        "Ref": "WashedLambdaVersionZ6fScTO3vhUF3GwN1ze2f0uhR8Mh3GvWcW5dT9KQ"
       },
       "Export": {
-        "Name": "sls-washed-dev-ServicesLambdaFunctionQualifiedArn"
+        "Name": "sls-washed-dev-WashedLambdaFunctionQualifiedArn"
       }
     },
     "ServiceEndpoint": {
